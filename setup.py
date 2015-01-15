@@ -10,7 +10,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 setup(
     name='sigma.deploy',
     version='0.1',
-    packages=['fabfile'],
+    packages=['deploy'],
     include_package_data=True,
     license='Proprietária',  # example license
     description='Aplicação padrão da SIGMA Geosistemas para deploy de servidores django.',
