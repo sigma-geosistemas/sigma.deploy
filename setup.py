@@ -18,6 +18,7 @@ setup(
     url='http://www.sigmageosistemas.com.br',
     author='George Silva',
     author_email='george@consultoriasigma.com.br',
+    install_requires=["fabric", "fabtools"],
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Fabric',
