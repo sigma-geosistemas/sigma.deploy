@@ -1,0 +1,32 @@
+#!/bin/bash
+
+NAME="{{ virtualenv_name }}"
+DJANGODIR={{ app_root }}
+VIRTUALENVDIR={{ virtualenv_path }}
+SOCKFILE={{ app_path }}/socket.sock
+USER={{ app_user }}
+GROUP={{ app_group }}
+NUM_WORKERS={{ no_workers }}
+DJANGO_SETTINGS_MODULE={{ virtualenv_name }}.settings
+
+# Activate the virtual environment
+cd $VIRTUALENVDIR
+source activate
+cd $DJANGODIR
+
+export DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
+export PYTHONPATH=$DJANGODIR:$PYTHONPATH
+
+echo $PYTHONPATH
+
+# Create the run directory if it doesn't exist
+RUNDIR=$(dirname $SOCKFILE)
+test -d $RUNDIR || mkdir -p $RUNDIR
+
+gunicorn {{ virtualenv_name }}.wsgi:application \
+   --name $NAME \
+   --workers $NUM_WORKERS \
+   --user=$USER --group=$GROUP \
+   --log-level=debug \
+   --bind=127.0.0.1:8000 \
+   --timeout 500

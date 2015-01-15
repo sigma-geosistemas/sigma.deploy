@@ -1,0 +1,5 @@
+[program:{{ virtualenv_name }}]
+command = {{ command_path }}
+user = {{ app_user }}
+stdout_logfile = {{ app_path}}/log.log
+redirect_stderr = true

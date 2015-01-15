@@ -1,0 +1,98 @@
+[DEFAULT]
+app_folder_prefix = /opt/apps/
+virtualenv_name = .virtualenvs
+postgresql_user_password = postgres
+postgresql_role_password = postgres
+deploy_templates_path = deploy/templates
+django_admin_enabled = False
+app_user = root
+app_group = root
+no_workers = 3
+
+# packages
+postgresql_version = 9.3
+postgis_version = 2.1
+
+# os
+distro = trusty
+
+# git
+deploy_branch = master
+
+# django
+debug = False
+template_debug = False
+
+[main]
+# folder that will be used as a prefix for repository and virtualenvs
+app_folder_prefix = /opt/apps/
+
+# example: /opt/apps/.virtualenvs
+# final virtualenv path: /opt/apps/.virtualenvs/mapport
+virtualenvs_path = .virtualenvs
+
+# example: /opt/apps/mapport
+virtualenv_name = mapport
+
+[packages]
+postgresql_version = 9.3
+postgis_version = 2.1
+
+[deploy]
+# optional in vagrant deploys
+fabric_user = root
+fabric_sudo_user = root
+fabric_sudo_password = vagrant
+fabric_parallel = 0
+fabric_hosts = 127.0.0.1:2222 # vagrant specific ip/port
+# optional
+# app_user
+# app_group
+# no_workers
+
+# template directory used to compile several needed files
+deploy_templates_path = deploy/templates
+
+[os]
+# valid values, for now: utopic, trusty, precise, lucid
+distro = trusty
+
+[git]
+git_url = https://github.com/enplan/mapport.git
+repository_name = mapport
+source_root = src
+# optional
+deploy_branch = ci-george
+
+# database configuration can be as many as needed. it must start with database-<database_alias>
+# this database alias will be used in django config. the database name here will be considered
+# when creating the database with postgresql
+[database-default]
+# default = True
+managed = True
+engine = django.contrib.gis.db.backends.postgis
+name = mapport
+user = postgres
+password = postgres
+host = localhost
+port = 5432
+options = -c search_path=mapport,public
+
+# [database-extra]
+# engine = django.contrib.gis.db.backends.postgis
+# name = mapport_test
+# user = postgres
+# password = postgres
+# host = localhost
+# port = 5432
+
+[django]
+debug = True
+template_debug = True
+
+# both optional, otherwise it will live in /opt/apps/mapport/mapport/src/mapport_website/static or ../media
+# media_root =
+# static_root
+
+# optional
+# allowed_hosts =

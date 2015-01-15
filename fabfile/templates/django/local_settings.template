@@ -1,0 +1,29 @@
+{% macro render_database_settings(alias, database={}) -%}
+    '{{ alias }}': {
+            'ENGINE': '{{ database.ENGINE }}',
+            'NAME': '{{ database.NAME }}',
+            'USER': '{{ database.USER }}',
+            'PASSWORD': '{{ database.PASSWORD }}',
+            'HOST': '{{ database.HOST }}',
+            'PORT': '{{ database.PORT }}',
+            {% if database.OPTIONS %}
+            'OPTIONS': {
+                'options': '{{ database.OPTIONS }}'
+            }
+        {% endif %}
+{%- endmacro %}
+
+DATABASES = {
+    {% for alias in databases.keys() %}
+        {{ render_database_settings(alias, database=databases[alias]) }}
+    },{% endfor %}
+}
+
+DEBUG = {{ debug }}
+
+TEMPLATE_DEBUG = {{ template_debug }}
+
+ALLOWED_HOSTS = [{% if allowed_hosts %}{% for host in allowed_hosts %}'{{ host }}',{% endfor %}{% endif %}]
+
+MEDIA_ROOT = "{{ media_root }}"
+STATIC_ROOT = "{{ static_root }}"
