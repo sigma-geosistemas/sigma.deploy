@@ -1,7 +1,8 @@
 import ConfigParser
 import os
-from fabric.state import env
 import pprint
+from fabric.state import env
+from fabric.decorators import task
 
 @task
 def load_fabconfig(configuration_file=None):
