@@ -12,7 +12,6 @@ def load_fabconfig(configuration_file=None):
         configuration.read(configuration_file)
 
         _load_main_configuration(configuration)
-        _load_git_configuration(configuration)
         _load_deploy_configuration(configuration)
         _load_os_configuration(configuration)
         _load_databases_configuration(configuration)
@@ -23,6 +22,9 @@ def load_fabconfig(configuration_file=None):
     pprint.pprint(env, indent=2)
 
 def _load_main_configuration(configuration):
+
+    # mapport
+    env.repository_name = configuration.get("git", "repository_name")
 
     # /opt/apps
     env.app_folder_prefix = configuration.get("main", "app_folder_prefix")
@@ -43,13 +45,8 @@ def _load_main_configuration(configuration):
     env.app_root = os.path.join(env.app_path, env.repository_name)
     env.django_settings_path = os.path.join(env.app_root, env.virtualenv_name)
 
-def _load_git_configuration(configuration):
-
     # http://github.com/enplan/mapport.git
     env.git_url = configuration.get("git", "git_url")
-
-    # mapport
-    env.repository_name = configuration.get("git", "repository_name")
 
     if configuration.has_option("git", "source_root"):
         # /opt/apps/mapport/mapport/src
