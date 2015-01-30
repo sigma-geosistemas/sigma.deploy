@@ -12,6 +12,7 @@ def load_fabconfig(configuration_file=None):
         configuration.read(configuration_file)
 
         _load_main_configuration(configuration)
+        _load_git_configuration(configuration)
         _load_deploy_configuration(configuration)
         _load_os_configuration(configuration)
         _load_databases_configuration(configuration)
