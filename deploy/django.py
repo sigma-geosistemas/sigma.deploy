@@ -26,7 +26,8 @@ def write_local_settings():
     if env.django["allowed_hosts"]:
         ctx["allowed_hosts"] = env.django["allowed_hosts"].split(",")
 
-    upload_template(filename="django/local_settings.template",
+    # /opt/apps/.virtualenvs/speed/src/deploy/deploy/templates
+    upload_template(filename=os.path.join(env.virtualenv_path,"src/deploy/deploy/templates", "django/local_settings.template"),
                     destination=os.path.join(env.django_settings_path, "local_settings.py"),
                     use_jinja=True,
                     template_dir=env.deploy_templates_path,
