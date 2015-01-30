@@ -35,7 +35,7 @@ def write_nginx_conf():
 def write_webserver_command():
 
     ctx = {"virtualenv_name": env.virtualenv_name,
-           "app_root": env.app_root,
+           "app_root": env.source_root,
            "virtualenv_path": os.path.join(env.virtualenv_path, "bin"),
            "app_path": env.app_path,
            "app_user": env.app_user,
