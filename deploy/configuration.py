@@ -104,7 +104,7 @@ def _load_deploy_configuration(configuration):
         if configuration.has_option("deploy", "fabric_hosts"):
             env.hosts = configuration.get("deploy", "fabric_hosts")
 
-    env.deploy_templates_path = configuration.get("deploy", "deploy_templates_path")
+    env.deploy_templates_path = configuration.get("deploy", "deploy_templates_path").format(env.virtualenv_name)
 
     env.postgresql_user_password = configuration.get("deploy", "postgresql_user_password")
     env.postgresql_role_password = configuration.get("deploy", "postgresql_role_password")

@@ -9,6 +9,8 @@ from fabtools.files import is_file
 from fabtools.git import checkout, clone
 from fabtools.python import is_pip_installed, install_pip, virtualenv
 from fabtools.python import install_requirements as fab_install_requirements
+from .database import configure_database_access, create_databases
+from .django import write_local_settings, migrate, collectstatic
 from .packages import MINIMAL_PACKAGES, POSTGRESQL_PACKAGES, POSTGIS_PACKAGES
 from .system import create_application_folder
 from .virtualenv import create_virtualenv
@@ -140,4 +142,19 @@ def install_all():
     install_postgresql()
     install_postgis()
     install_requirements()
+
+@task
+def configure_all():
+
     configure_srid_900913()
+    configure_database_access()
+    create_databases()
+    write_local_settings()
+    migrate()
+    collectstatic()
+
+@task
+def install_and_config():
+
+    install_all()
+    configure_all()
