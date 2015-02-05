@@ -1,9 +1,11 @@
 import os
 from fabric.context_managers import cd
-from fabric.contrib.files import exists
+from fabric.contrib.files import exists, append
 from fabric.decorators import task
 from fabric.operations import sudo
 from fabric.state import env
+import fabtools
+from fabtools.files import is_file
 from fabtools.git import checkout, clone
 from fabtools.python import is_pip_installed, install_pip, virtualenv
 from fabtools.python import install_requirements as fab_install_requirements
@@ -29,12 +31,27 @@ POSTGRESQL_REPOSITORIES = {"utopic": POSTGRESQL_UTOPIC_REPO,
                            "precise": POSTGRESQL_PRECISE_REPO,
                            "lucid": POSTGRESQL_LUCID_REPO}
 
+SRID_900913_DEFINITION = "<900913> proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over<>"
+EPSG_SHARED = "/usr/share/proj/epsg"
+EPSG_LOCAL = "/usr/local/share/proj/epsg"
+
 def _determine_postgresql_repository(distro):
 
     if distro not in POSTGRESQL_REPOSITORIES:
         raise ValueError("Distro not supported! Valid distros are: {0}".format(", ".join(POSTGRESQL_REPOSITORIES.keys())))
 
     return POSTGRESQL_REPOSITORIES[distro]
+
+@task
+def configure_srid_900913():
+
+    if is_file(EPSG_SHARED, use_sudo=True):
+
+        append(EPSG_SHARED, SRID_900913_DEFINITION, use_sudo=True)
+
+    if is_file(EPSG_LOCAL, use_sudo=True):
+
+        append(EPSG_LOCAL, SRID_900913_DEFINITION, use_sudo=True)
 
 
 @task
@@ -47,6 +64,13 @@ def install_minimal():
 
     if env.get("extra_packages"):
         sudo("apt-get install --yes --force-yes {0}".format(env.extra_packages))
+
+@task
+def install_nodejs():
+
+    if env.get("node_support"):
+        fabtools.nodejs.install_from_source()
+        fabtools.nodejs.install_package('bower')
 
 @task
 def install_postgresql():
@@ -91,7 +115,8 @@ def install_requirements():
 
     create_application_folder()
 
-    clone_repository()
+    if env.clone:
+        clone_repository()
 
     with virtualenv(env.virtualenv_path):
         with cd(env.app_root):
@@ -115,3 +140,4 @@ def install_all():
     install_postgresql()
     install_postgis()
     install_requirements()
+    configure_srid_900913()

@@ -24,7 +24,7 @@ def write_local_settings():
             "static_root": env.django["static_root"]}
 
     if env.django["allowed_hosts"]:
-        ctx["allowed_hosts"] = env.django["allowed_hosts"].split(",")
+        ctx["allowed_hosts"] = env.django["allowed_hosts"].split(" ")
 
     upload_template(filename="django/local_settings.template",
                     destination=os.path.join(env.django_settings_path, "local_settings.py"),

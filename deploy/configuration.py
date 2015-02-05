@@ -59,6 +59,9 @@ def _load_main_configuration(configuration):
         env.deploy_branch = configuration.get("git", "deploy_branch")
 
 
+    env.clone = configuration.getboolean("git", "clone")
+
+
 def _load_packages_configuration(configuration):
 
     env.postgresql_version = configuration.get("packages", "postgresql_version")
@@ -67,6 +70,9 @@ def _load_packages_configuration(configuration):
 
     if configuration.has_section("packages") and configuration.has_option("packages", "extra_packages"):
         env.extra_packages = configuration.get("packages", "extra_packages")
+
+    if configuration.has_section("packages") and configuration.has_option("packages", "node_support"):
+        env.node_support = configuration.getboolean("packages", "node_support")
 
 def _load_os_configuration(configuration):
 
