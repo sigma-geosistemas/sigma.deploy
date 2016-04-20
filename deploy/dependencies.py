@@ -62,10 +62,10 @@ def install_minimal():
     """Installs minimal dependencies"""
 
     sudo("apt-get update")
-    sudo("apt-get install --yes --force-yes {0}".format(MINIMAL_PACKAGES))
+    sudo("apt-get install --yes --force-yes {0}".format(MINIMAL_PACKAGES), False)
 
     if env.get("extra_packages"):
-        sudo("apt-get install --yes --force-yes {0}".format(env.extra_packages))
+        sudo("apt-get install --yes --force-yes {0}".format(env.extra_packages), False)
 
 @task
 def install_nodejs():
@@ -107,6 +107,11 @@ def install_requirements():
 
     """Installs all the requirements on the requirements file"""
 
+    REQUIREMENTS_DICT = {"SINGLE": "requirements.txt",
+                         "PRODUCTION": "requirements/production.txt",
+                         "TEST": "requirements/tests.txt", 
+                         "LOCAL": "requirements/local.txt"}
+
     # TODO: sudo should not be required. we need to configure this to use a new user for each app.
 
     if not is_pip_installed():
@@ -122,7 +127,10 @@ def install_requirements():
 
     with virtualenv(env.virtualenv_path):
         with cd(env.app_root):
-            fab_install_requirements("requirements.txt", use_sudo=True)
+
+            env_type = env.get("environment-type", "LOCAL")
+
+            fab_install_requirements(REQUIREMENTS_DICT[env_type], use_sudo=True)
 
 @task
 def upgrade_requirements():

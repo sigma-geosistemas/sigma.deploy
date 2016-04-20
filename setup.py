@@ -12,7 +12,7 @@ setup(
     version='0.1',
     packages=['deploy'],
     include_package_data=True,
-    license='Proprietária',  # example license
+    license='MIT',  # example license
     description='Aplicação padrão da SIGMA Geosistemas para deploy de servidores django.',
     long_description=README,
     url='http://www.sigmageosistemas.com.br',
@@ -23,7 +23,7 @@ setup(
         'Environment :: Web Environment',
         'Framework :: Fabric',
         'Intended Audience :: Developers',
-        'License :: Proprietária', # example license
+        'License :: MIT',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',

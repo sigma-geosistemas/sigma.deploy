@@ -1,7 +1,6 @@
 """All tasks related to database manipulation"""
 from fabric.context_managers import settings
 from fabric.decorators import task
-from fabric.operations import run, sudo
 from fabric.state import env
 from fabtools import user as system_user
 from fabtools.postgres import database_exists as postgresql_exists, user_exists
