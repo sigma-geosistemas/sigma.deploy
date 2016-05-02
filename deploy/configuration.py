@@ -17,6 +17,7 @@ def load_fabconfig(configuration_file=None):
         _load_databases_configuration(configuration)
         _load_packages_configuration(configuration)
         _load_django_configuration(configuration)
+        _load_opbeat_configuration(configuration)
 
     print "Configuration Done!"
     pprint.pprint(env, indent=2)
@@ -80,6 +81,15 @@ def _load_os_configuration(configuration):
 
     # trusty
     env.distro = configuration.get("os", "distro")
+
+def _load_opbeat_configuration(configuration):
+
+    if configuration.has_section("opbeat"):
+
+        env.opbeat = {}
+        env.opbeat["organization_id"] = configuration.get("opbeat", "organization_id")
+        env.opbeat["app_id"] = configuration.get("opbeat", "app_id")
+        env.opbeat["secret_token"] = configuration.get("opbeat", "secret_token")
 
 def _load_deploy_configuration(configuration):
 
