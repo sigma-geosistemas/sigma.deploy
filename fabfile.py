@@ -5,4 +5,5 @@ from deploy.django import *
 from deploy.system import *
 from deploy.virtualenv import *
 from deploy.webserver import *
+from deploy.opbeat import *
 from fabtools.vagrant import vagrant
