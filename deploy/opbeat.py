@@ -13,8 +13,9 @@ def register_deployment(path, org, app, secret):
                                app=<app>,
                                secret=<secret>
     """
-    with(cd(path)):
-        revision = run('git log -n 1 --format=oneline').split(" ")[0]
+    with cd(path):
+        revision = run('git log -n 1 --format=%H').split(" ")[0]
+        import pdb; pdb.set_trace()
         branch = run('git rev-parse --abbrev-ref HEAD')
         run('curl https://intake.opbeat.com/api/v1/organizations/{}/apps/{}/releases/'
             ' -H "Authorization: Bearer {}"'
