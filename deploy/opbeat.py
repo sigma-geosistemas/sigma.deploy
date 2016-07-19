@@ -14,11 +14,10 @@ def register_deployment(path, org, app, secret):
                                secret=<secret>
     """
     with cd(path):
-        revision = run('git log -n 1 --format=%H').split(" ")[0]
-        import pdb; pdb.set_trace()
+        revision = run('git log -n 1 --format=%H')
         branch = run('git rev-parse --abbrev-ref HEAD')
-        run('curl https://intake.opbeat.com/api/v1/organizations/{}/apps/{}/releases/'
-            ' -H "Authorization: Bearer {}"'
-            ' -d rev={}'
-            ' -d branch={}'
-            ' -d status=completed'.format(org, app, secret, revision, branch))
+        run('''curl https://intake.opbeat.com/api/v1/organizations/{0}/apps/{1}/releases/ \ 
+-H "Authorization: Bearer {2}" \
+-d rev={3} \
+-d branch={4} \
+-d status=completed'''.format(org, app, secret, revision, branch))
