@@ -18,20 +18,22 @@ from .virtualenv import create_virtualenv
 POSTGRESQL_APT_REPOSITORY_URL = "http://apt.postgresql.org/pub/repos/apt/"
 
 # selects a postgresql version to install.
-POSTGRESQL_VERSION = env.get("postgresql_version", "9.3")
+POSTGRESQL_VERSION = env.get("postgresql_version", "9.5")
 
 # selects which postgis version to install
-POSTGIS_VERSION = env.get("postgis_version", "2.1")
+POSTGIS_VERSION = env.get("postgis_version", "2.2")
 
 POSTGRESQL_UTOPIC_REPO = "utopic-pgdg"
 POSTGRESQL_TRUSTY_REPO = "trusty-pgdg"
 POSTGRESQL_PRECISE_REPO = "precise-pgdg"
 POSTGRESQL_LUCID_REPO = "lucid-pgdg"
+POSTGRESQL_XENIAL_REPO = "xenial-pgdg"
 
 POSTGRESQL_REPOSITORIES = {"utopic": POSTGRESQL_UTOPIC_REPO,
                            "trusty": POSTGRESQL_TRUSTY_REPO,
                            "precise": POSTGRESQL_PRECISE_REPO,
-                           "lucid": POSTGRESQL_LUCID_REPO}
+                           "lucid": POSTGRESQL_LUCID_REPO,
+                           "xenial": POSTGRESQL_XENIAL_REPO}
 
 SRID_900913_DEFINITION = "<900913> proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over<>"
 EPSG_SHARED = "/usr/share/proj/epsg"
@@ -79,7 +81,7 @@ def install_postgresql():
 
     """Installs PostgreSQL. Oh really? :P"""
 
-    distro = env.get("ubuntu-distro", "trusty")
+    distro = env.get("ubuntu-distro", "xenial")
     repository = _determine_postgresql_repository(distro)
 
     sudo('echo "deb {0} {1} main" > /etc/apt/sources.list.d/pgdg.list'.format(POSTGRESQL_APT_REPOSITORY_URL, repository))
