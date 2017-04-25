@@ -1,4 +1,4 @@
-"""All tasks related to database manipulation"""
+ """All tasks related to database manipulation"""
 from fabric.context_managers import settings
 from fabric.decorators import task
 from fabric.state import env
@@ -9,17 +9,20 @@ from fabtools.postgres import _run_as_pg
 from fabtools.mysql import database_exists as mysql_exists
 from fabtools.mysql import create_database as create_mysql
 
+
 @task
 def configure_database_access():
 
     configure_postgres_user()
     configure_postgres_role()
 
+
 @task
 def configure_postgres_user():
 
     if system_user.exists("postgres"):
         system_user.modify("postgres", password=env.postgresql_user_password)
+
 
 @task
 def configure_postgres_role():

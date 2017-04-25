@@ -76,6 +76,7 @@ def install_nodejs():
         fabtools.nodejs.install_from_source()
         fabtools.nodejs.install_package('bower')
 
+
 @task
 def install_postgresql():
 
@@ -91,11 +92,13 @@ def install_postgresql():
     packages = POSTGRESQL_PACKAGES.format(POSTGRESQL_VERSION)
     sudo("apt-get install --yes --force-yes {0}".format(packages))
 
+
 @task
 def install_postgis():
 
     packages = POSTGIS_PACKAGES.format(POSTGRESQL_VERSION, POSTGIS_VERSION)
     sudo("apt-get install --yes --force-yes {0}".format(packages))
+
 
 @task
 def clone_repository():
@@ -104,6 +107,8 @@ def clone_repository():
 
     if env.has_key("deploy_branch"):
         checkout(env.app_root, env.deploy_branch, use_sudo=True)
+
+
 @task
 def install_requirements():
 
