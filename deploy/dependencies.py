@@ -35,9 +35,11 @@ POSTGRESQL_REPOSITORIES = {"utopic": POSTGRESQL_UTOPIC_REPO,
                            "lucid": POSTGRESQL_LUCID_REPO,
                            "xenial": POSTGRESQL_XENIAL_REPO}
 
-SRID_900913_DEFINITION = "<900913> proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over<>"
+SRID_900913_DEFINITION = "<900913> proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over<>"  # noqa
+SRID_900913_WKT_DEFINITION = """900913,PROJCS["Google Maps Global Mercator",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]],PROJECTION["Mercator_2SP"],PARAMETER["standard_parallel_1",0],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",0],PARAMETER["false_easting",0],PARAMETER["false_northing",0],UNIT["Meter",1],EXTENSION["PROJ4","+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs"],AUTHORITY["EPSG","900913"]]"""  # noqa
 EPSG_SHARED = "/usr/share/proj/epsg"
 EPSG_LOCAL = "/usr/local/share/proj/epsg"
+
 
 def _determine_postgresql_repository(distro):
 
@@ -45,6 +47,7 @@ def _determine_postgresql_repository(distro):
         raise ValueError("Distro not supported! Valid distros are: {0}".format(", ".join(POSTGRESQL_REPOSITORIES.keys())))
 
     return POSTGRESQL_REPOSITORIES[distro]
+
 
 @task
 def configure_srid_900913():
@@ -57,6 +60,10 @@ def configure_srid_900913():
 
         append(EPSG_LOCAL, SRID_900913_DEFINITION, use_sudo=True)
 
+    data_dir = sudo('gdal-config --data-dir')
+    cubewerx = os.path.join(data_dir, 'cubewerx_extra.wkt')
+    append(cubewerx, SRID_900913_WKT_DEFINITION)
+
 
 @task
 def install_minimal():
@@ -68,6 +75,7 @@ def install_minimal():
 
     if env.get("extra_packages"):
         sudo("apt-get install --yes --force-yes {0}".format(env.extra_packages), False)
+
 
 @task
 def install_nodejs():
@@ -105,7 +113,7 @@ def clone_repository():
     if not exists(os.path.join(env.app_root, "requirements.txt")):
         clone(env.git_url, env.app_root, use_sudo=True)
 
-    if env.has_key("deploy_branch"):
+    if 'deploy_branch' in env:
         checkout(env.app_root, env.deploy_branch, use_sudo=True)
 
 
@@ -116,13 +124,11 @@ def install_requirements():
 
     REQUIREMENTS_DICT = {"SINGLE": "requirements.txt",
                          "PRODUCTION": "requirements/production.txt",
-                         "TEST": "requirements/tests.txt", 
+                         "TEST": "requirements/tests.txt",
                          "LOCAL": "requirements/local.txt"}
 
-    # TODO: sudo should not be required. we need to configure this to use a new user for each app.
-
     if not is_pip_installed():
-        install_pip() # use_sudo defaults to True
+        install_pip()  # use_sudo defaults to True
 
     # inside here we check if the virtualenv exists, no need for double check.
     create_virtualenv()
@@ -137,7 +143,9 @@ def install_requirements():
 
             env_type = env.get("environment-type", "LOCAL")
 
-            fab_install_requirements(REQUIREMENTS_DICT[env_type], use_sudo=True)
+            fab_install_requirements(REQUIREMENTS_DICT[env_type],
+                                     use_sudo=True)
+
 
 @task
 def upgrade_requirements():
@@ -147,6 +155,7 @@ def upgrade_requirements():
     with virtualenv(env.virtualenv_path):
         with cd(env.app_root):
             fab_install_requirements("requirements.txt", upgrade=True, use_sudo=True)
+
 
 @task
 def install_all():
@@ -158,6 +167,7 @@ def install_all():
     install_postgis()
     install_requirements()
 
+
 @task
 def configure_all():
 
@@ -167,6 +177,7 @@ def configure_all():
     write_local_settings()
     migrate()
     collectstatic()
+
 
 @task
 def install_and_config():
