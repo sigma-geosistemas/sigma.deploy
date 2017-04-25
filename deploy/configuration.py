@@ -4,6 +4,7 @@ import pprint
 from fabric.state import env
 from fabric.decorators import task
 
+
 @task
 def load_fabconfig(configuration_file=None):
 
@@ -21,6 +22,7 @@ def load_fabconfig(configuration_file=None):
 
     print "Configuration Done!"
     pprint.pprint(env, indent=2)
+
 
 def _load_main_configuration(configuration):
 
@@ -54,11 +56,9 @@ def _load_main_configuration(configuration):
         env.source_root = os.path.join(env.app_root, configuration.get("git", "source_root"))
         env.django_settings_path = os.path.join(env.source_root, env.virtualenv_name)
 
-
     if configuration.has_option("git", "deploy_branch"):
         # ci-george, for example
         env.deploy_branch = configuration.get("git", "deploy_branch")
-
 
     env.clone = configuration.getboolean("git", "clone")
 
@@ -75,12 +75,14 @@ def _load_packages_configuration(configuration):
     if configuration.has_section("packages") and configuration.has_option("packages", "node_support"):
         env.node_support = configuration.getboolean("packages", "node_support")
 
+
 def _load_os_configuration(configuration):
 
     """Loads all OS configurations"""
 
     # trusty
     env.distro = configuration.get("os", "distro")
+
 
 def _load_opbeat_configuration(configuration):
 
@@ -90,6 +92,7 @@ def _load_opbeat_configuration(configuration):
         env.opbeat["organization_id"] = configuration.get("opbeat", "organization_id")
         env.opbeat["app_id"] = configuration.get("opbeat", "app_id")
         env.opbeat["secret_token"] = configuration.get("opbeat", "secret_token")
+
 
 def _load_deploy_configuration(configuration):
 
@@ -169,6 +172,7 @@ def _load_databases_configuration(configuration):
 
             if database_options:
                 env.databases[alias]["OPTIONS"] = database_options
+
 
 def _load_django_configuration(configuration):
 
