@@ -154,7 +154,9 @@ def upgrade_requirements():
 
     with virtualenv(env.virtualenv_path):
         with cd(env.app_root):
-            fab_install_requirements("requirements.txt", upgrade=True, use_sudo=True)
+            fab_install_requirements("requirements.txt",
+                                     upgrade=True,
+                                     use_sudo=True)
 
 
 @task
