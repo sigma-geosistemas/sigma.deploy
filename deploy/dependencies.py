@@ -21,7 +21,7 @@ POSTGRESQL_APT_REPOSITORY_URL = "http://apt.postgresql.org/pub/repos/apt/"
 POSTGRESQL_VERSION = env.get("postgresql_version", "9.5")
 
 # selects which postgis version to install
-POSTGIS_VERSION = env.get("postgis_version", "2.2")
+POSTGIS_VERSION = env.get("postgis_version", "2.3")
 
 POSTGRESQL_UTOPIC_REPO = "utopic-pgdg"
 POSTGRESQL_TRUSTY_REPO = "trusty-pgdg"
@@ -60,9 +60,9 @@ def configure_srid_900913():
 
         append(EPSG_LOCAL, SRID_900913_DEFINITION, use_sudo=True)
 
-    data_dir = sudo('gdal-config --data-dir')
+    data_dir = sudo('gdal-config --datadir')
     cubewerx = os.path.join(data_dir, 'cubewerx_extra.wkt')
-    append(cubewerx, SRID_900913_WKT_DEFINITION)
+    append(cubewerx, SRID_900913_WKT_DEFINITION, use_sudo=True)
 
 
 @task
@@ -134,8 +134,7 @@ def install_requirements():
     create_virtualenv()
 
     create_application_folder()
-
-    if env.clone:
+    if env.clone.upper() == 'TRUE':
         clone_repository()
 
     with virtualenv(env.virtualenv_path):
