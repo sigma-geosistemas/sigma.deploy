@@ -103,7 +103,7 @@ def install_postgresql():
 @task
 def install_language_pack():
 
-    sudo("apt-get install language-pack-pt")
+    sudo("apt-get install --yes --force-yes language-pack-pt")
 
 @task
 def install_postgis():
