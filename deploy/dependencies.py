@@ -100,6 +100,10 @@ def install_postgresql():
     packages = POSTGRESQL_PACKAGES.format(POSTGRESQL_VERSION)
     sudo("apt-get install --yes --force-yes {0}".format(packages))
 
+@task
+def install_language_pack():
+
+    sudo("apt-get install language-pack-pt")
 
 @task
 def install_postgis():
@@ -162,7 +166,7 @@ def upgrade_requirements():
 def install_all():
 
     """Install all dependencies"""
-
+    install_language_pack()
     install_minimal()
     install_postgresql()
     install_postgis()
